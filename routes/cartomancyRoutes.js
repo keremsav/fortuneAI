@@ -44,9 +44,9 @@ router.get('/cartomancy', async function(req,res) {
         usedCards.push(chosenCards);
         storeUsedCardsInCache(usedCards);
         console.log('Chosen Cards:', chosenCards);
-
         storedDeck = storedDeck.slice(3);
         storeDeckInCache(storedDeck);
+
 
         let resultDeck = await openAICall(chosenCards);
         console.log('OpenAI Response:', resultDeck);

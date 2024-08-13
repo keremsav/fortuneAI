@@ -10,7 +10,7 @@ const openai = new OpenAI({
 
 async function openAICall(cards) {
     const completion = await openai.chat.completions.create({
-        messages: [{ role: "system", content: `Imagine you are a skilled fortune teller using cartomancy to provide insights into the future. I have selected the following three cards: ${cards}. Please provide a detailed and mystical reading for these cards, interpreting their symbolic meanings and how they might relate to the querent's life journey. Use intuitive and evocative language, focusing on themes of destiny, love, and personal growth.
+        messages: [{ role: "system", content: `Imagine you are a skilled fortune teller using cartomancy to provide insights into the past,the present and the future. I have selected the following three cards: ${cards}. Please provide a detailed and mystical reading for these cards, interpreting their symbolic meanings and how they might relate to the querent's life journey. Give the answer in Turkish.
 ` }],
         model: "gpt-4o-mini",
 

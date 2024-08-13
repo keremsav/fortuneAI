@@ -19,10 +19,10 @@ let shuffleRandomDeck = (deck) => {
 let newDeck = shuffleRandomDeck(baseDeck);
 
 let topChosenCards = (deck) => {
-    let pastCard = deck[0];
-    let presentCard = deck[1];
-    let futureCard = deck[2];
-    return {pastCard, presentCard, futureCard};
+    let pastCard = deck[0].suit + deck[0].value;
+    let presentCard = deck[1].suit + deck[1].value;
+    let futureCard = deck[2].suit + deck[2].value;
+    return pastCard + " " + presentCard + " " + futureCard;
 };
 let selectCards = (firstCard,secondCard,thirdCard,deck) => {
     let pastCard = deck[firstCard];
