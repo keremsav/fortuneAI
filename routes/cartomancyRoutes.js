@@ -22,38 +22,37 @@ const storeUsedCardsInCache = (cards) => {
 const getUsedCardsFromCache = () => {
     return cache.get('usedCards') || [];
 };
-router.get('/cartomancy', async function(req,res) {
+router.post('/cartomancy', async (req,res) => {
     try {
+        const {firstCard,secondCard,thirdCard} = req.body;
         let storedDeck = getDeckFromCache();
-        console.log('Stored Deck:', storedDeck);
-
         let usedCards = getUsedCardsFromCache();
-        console.log('Used Cards:', usedCards);
 
-        // Reshuffle if necessary
         if (!storedDeck || storedDeck.length < 3) {
             storedDeck = shuffleRandomDeck(baseDeck);
             console.log('Newly Shuffled Deck:', storedDeck);
-
             usedCards = [];
             storeDeckInCache(storedDeck);
             storeUsedCardsInCache(usedCards);
         }
+        let chosenCards;
+        if(req.body.length>0) {
+            chosenCards = selectCards(firstCard,secondCard,thirdCard,storedDeck);
+        }else {
+            chosenCards = topChosenCards(storedDeck);
+            usedCards.push(chosenCards);  // Store the chosen cards
+            storedDeck = storedDeck.slice(3);  // Remove the chosen cards from the deck
+            storeDeckInCache(storedDeck);
+            storeUsedCardsInCache(usedCards);
 
-        let chosenCards =  topChosenCards(storedDeck);
-        usedCards.push(chosenCards);
-        storeUsedCardsInCache(usedCards);
-        console.log('Chosen Cards:', chosenCards);
-        storedDeck = storedDeck.slice(3);
-        storeDeckInCache(storedDeck);
-
-
+        }
+        console.log('Chosen cards: ',chosenCards);
         let resultDeck = await openAICall(chosenCards);
         console.log('OpenAI Response:', resultDeck);
-
         res.send(resultDeck).status(200);
     } catch (err) {
-        res.send(err);
+        console.log('Error: ' , err);
+        res.status(500).send({error : "Something went wrong with the cartomancy process."});
     }
 })
 

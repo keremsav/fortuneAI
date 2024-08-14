@@ -1,21 +1,24 @@
 require('dotenv').config({path:"../.env"});
 let OpenAI = require('openai');
-const  z = require("zod");
-const zodResponseFormat = require('openai/helpers/zod');
-
 
 const openai = new OpenAI({
     apiKey : process.env.API_KEY,
 });
 
 async function openAICall(cards) {
-    const completion = await openai.chat.completions.create({
-        messages: [{ role: "system", content: `Imagine you are a skilled fortune teller using cartomancy to provide insights into the past,the present and the future. I have selected the following three cards: ${cards}. Please provide a detailed and mystical reading for these cards, interpreting their symbolic meanings and how they might relate to the querent's life journey. Give the answer in Turkish.
-` }],
-        model: "gpt-4o-mini",
+    try {
+        let prompt = `You are a master fortune teller, an expert in the ancient art of cartomancy. With your wisdom and intuitive powers, you can peer into the past, understand the mysteries of the present, and glimpse the paths that lead to the future. Before you lie three cards that have been drawn to illuminate the querent’s life journey: ${cards}. For each card, provide a detailed interpretation of its symbolic meaning, focusing on how it reveals lessons from the past, influences the present, and offers guidance for the future. Weave these insights together to craft a mystical, poetic, and deeply insightful reading that touches on emotions, personal growth, and potential challenges. The querent seeks not just information but a transformative message that resonates with their soul.`
+        const completion = await openai.chat.completions.create({
+            messages: [{ role: "system", content: prompt}],
+            model: "gpt-4o-mini",
 
-    });
-    return completion.choices[0];
+        });
+        return completion.choices[0];
+    } catch (err) {
+       console.log("Error on Open API call: " + err);
+       throw new Error("Failed to get a response from OpenAPI.")
+    }
+
 }
 
 module.exports = {openAICall};
